@@ -441,6 +441,164 @@ function DataSiswa() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {imporBuka && <DialogImporSiswa onTutup={() => setImporBuka(false)} />}
     </AppLayout>
+  );
+}
+
+function DialogImporSiswa({ onTutup }: { onTutup: () => void }) {
+  const { kelas, siswa, segarkan } = useData();
+  const [baris, setBaris] = React.useState<BarisSiswaImpor[]>([]);
+  const [namaBerkas, setNamaBerkas] = React.useState("");
+  const [sibuk, setSibuk] = React.useState(false);
+  const berkasRef = React.useRef<HTMLInputElement>(null);
+
+  const valid = baris.filter((b) => !b.pesan);
+  const gagal = baris.filter((b) => b.pesan);
+
+  async function pilihBerkas(file: File | undefined) {
+    if (!file) return;
+    try {
+      const mentah = await bacaBerkasSiswa(file);
+      setNamaBerkas(file.name);
+      setBaris(cocokkanSiswa(mentah, kelas, siswa));
+    } catch (e) {
+      toast.error(`Gagal membaca berkas: ${(e as Error).message}`);
+    }
+  }
+
+  async function simpanSemua() {
+    if (valid.length === 0) return;
+    setSibuk(true);
+    try {
+      const tambah = valid
+        .filter((b) => !b.adaId)
+        .map((b) => ({
+          nis: b.nis,
+          nisn: b.nisn,
+          nama: b.nama,
+          jk: b.jk,
+          kelas_id: b.kelasId,
+          wali: b.wali,
+          tanggal_lahir: b.tanggalLahir || null,
+        }));
+      const ubah = valid.filter((b) => b.adaId);
+
+      if (tambah.length > 0) {
+        const { error } = await supabase.from("siswa").insert(tambah);
+        if (error) throw new Error(error.message);
+      }
+      for (const b of ubah) {
+        const { error } = await supabase
+          .from("siswa")
+          .update({
+            nisn: b.nisn,
+            nama: b.nama,
+            jk: b.jk,
+            kelas_id: b.kelasId,
+            wali: b.wali,
+            tanggal_lahir: b.tanggalLahir || null,
+          })
+          .eq("id", b.adaId!);
+        if (error) throw new Error(error.message);
+      }
+      await segarkan();
+      toast.success(`${tambah.length} siswa baru ditambahkan, ${ubah.length} diperbarui.`);
+      onTutup();
+    } catch (e) {
+      toast.error(`Gagal mengimpor: ${(e as Error).message}`);
+    } finally {
+      setSibuk(false);
+    }
+  }
+
+  return (
+    <Dialog open onOpenChange={(o) => !o && onTutup()}>
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
+        <DialogHeader>
+          <DialogTitle>Impor Siswa dari Dokumen</DialogTitle>
+          <DialogDescription>
+            Unggah berkas Excel (.xlsx/.xls) atau CSV dengan kolom: nis, nisn, nama, jk, kelas,
+            tanggal_lahir, wali. Siswa dengan NIS yang sudah ada akan diperbarui.
+          </DialogDescription>
+        </DialogHeader>
+
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            ref={berkasRef}
+            type="file"
+            accept=".xlsx,.xls,.csv"
+            className="hidden"
+            onChange={(e) => void pilihBerkas(e.target.files?.[0])}
+          />
+          <Button variant="outline" className="gap-2" onClick={() => berkasRef.current?.click()}>
+            <Upload className="h-4 w-4" /> Pilih Berkas
+          </Button>
+          <Button
+            variant="ghost"
+            className="gap-2"
+            onClick={() => unduhTemplateSiswa(kelas[0]?.nama ?? "")}
+          >
+            <Download className="h-4 w-4" /> Unduh Template
+          </Button>
+          {namaBerkas && <span className="text-sm text-muted-foreground">{namaBerkas}</span>}
+        </div>
+
+        {baris.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm">
+              <span className="font-semibold text-primary">{valid.length} baris siap diimpor</span>
+              {gagal.length > 0 && (
+                <span className="text-destructive"> · {gagal.length} baris bermasalah</span>
+              )}
+            </p>
+            <div className="max-h-72 overflow-auto rounded-lg border border-border">
+              <table className="w-full min-w-[640px]">
+                <thead className="bg-secondary/60">
+                  <tr>
+                    <th className={thCls}>No</th>
+                    <th className={thCls}>NIS</th>
+                    <th className={thCls}>Nama</th>
+                    <th className={thCls}>L/P</th>
+                    <th className={thCls}>Kelas</th>
+                    <th className={thCls}>Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {baris.map((b) => (
+                    <tr key={b.no} className={b.pesan ? "bg-destructive/5" : ""}>
+                      <td className={`${tdCls} text-muted-foreground`}>{b.no}</td>
+                      <td className={`${tdCls} font-mono text-xs`}>{b.nis}</td>
+                      <td className={tdCls}>{b.nama}</td>
+                      <td className={tdCls}>{b.jk}</td>
+                      <td className={tdCls}>{b.namaKelas}</td>
+                      <td className={tdCls}>
+                        {b.pesan ? (
+                          <span className="text-xs text-destructive">{b.pesan}</span>
+                        ) : b.adaId ? (
+                          <span className="text-xs text-muted-foreground">Perbarui data</span>
+                        ) : (
+                          <span className="text-xs text-primary">Siswa baru</span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+
+        <DialogFooter>
+          <Button variant="outline" onClick={onTutup} disabled={sibuk}>
+            Batal
+          </Button>
+          <Button onClick={() => void simpanSemua()} disabled={sibuk || valid.length === 0}>
+            {sibuk ? "Mengimpor…" : `Impor ${valid.length} Siswa`}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
