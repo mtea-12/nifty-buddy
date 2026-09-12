@@ -2,12 +2,19 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 import { z } from "zod";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { Download, Pencil, Plus, Trash2, Upload } from "lucide-react";
 import { AppLayout } from "@/components/AppLayout";
 import { PanelTabel, Pilih, thCls, tdCls, KosongTabel, Lencana } from "@/components/Tabel";
+import { DokumenSiswa } from "@/components/DokumenSiswa";
 import { useData } from "@/lib/db";
 import { useAuth } from "@/lib/auth";
 import { nilaiAkhir } from "@/lib/data";
+import {
+  bacaBerkasSiswa,
+  cocokkanSiswa,
+  unduhTemplateSiswa,
+  type BarisSiswaImpor,
+} from "@/lib/impor-siswa";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
