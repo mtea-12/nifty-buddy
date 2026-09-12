@@ -3,9 +3,11 @@
 
 export const SEKOLAH_DEFAULT = {
   nama: "SMK Muhammadiyah 1 Paguyangan",
-  alamat: "-",
-  npsn: "-",
+  alamat: "Jl. Raya Paguyangan Km. 3 Kec. Paguyangan, Kab. Brebes, Jawa Tengah 52276",
+  npsn: "20338410",
   kepsek: "-",
+  email: "smkmuhpgy@gmail.com",
+  telepon: "(0289) 4311929",
 };
 
 export type Peran = "admin" | "guru" | "wali" | "siswa";
@@ -16,6 +18,8 @@ export type Sekolah = {
   alamat: string;
   npsn: string;
   kepsek: string;
+  email: string;
+  telepon: string;
 };
 
 export type TahunAjaran = {
