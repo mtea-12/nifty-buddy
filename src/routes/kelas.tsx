@@ -165,6 +165,7 @@ function DataKelas() {
               <th className={thCls}>Program Keahlian</th>
               <th className={thCls}>Wali Kelas</th>
               <th className={thCls}>Jumlah Siswa</th>
+              {bolehUbah && <th className={thCls}>Aksi</th>}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
@@ -177,11 +178,24 @@ function DataKelas() {
                 <td className={`${tdCls} whitespace-normal`}>{k.jurusan}</td>
                 <td className={tdCls}>{namaGuru(k.waliId)}</td>
                 <td className={tdCls}>{siswa.filter((s) => s.kelasId === k.id).length}</td>
+                {bolehUbah && (
+                  <td className={tdCls}>
+                    <button
+                      type="button"
+                      onClick={() => setUbah(k)}
+                      className="rounded-lg border border-input px-3 py-1.5 text-xs font-semibold hover:bg-secondary"
+                    >
+                      Ubah
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
       </PanelTabel>
+      {ubah && <DialogUbahKelas kelas={ubah} tutup={() => setUbah(null)} />}
     </AppLayout>
+
   );
 }
