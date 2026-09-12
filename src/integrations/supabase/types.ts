@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      dokumen_siswa: {
+        Row: {
+          created_at: string
+          id: string
+          jalur: string
+          jenis: string
+          nama_file: string
+          siswa_id: string
+          ukuran: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          jalur: string
+          jenis?: string
+          nama_file: string
+          siswa_id: string
+          ukuran?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          jalur?: string
+          jenis?: string
+          nama_file?: string
+          siswa_id?: string
+          ukuran?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dokumen_siswa_siswa_id_fkey"
+            columns: ["siswa_id"]
+            isOneToOne: false
+            referencedRelation: "siswa"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       guru: {
         Row: {
           created_at: string
