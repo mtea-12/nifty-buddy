@@ -300,24 +300,30 @@ export type Database = {
       sekolah: {
         Row: {
           alamat: string
+          email: string
           id: string
           kepsek: string
           nama: string
           npsn: string
+          telepon: string
         }
         Insert: {
           alamat?: string
+          email?: string
           id?: string
           kepsek?: string
           nama: string
           npsn?: string
+          telepon?: string
         }
         Update: {
           alamat?: string
+          email?: string
           id?: string
           kepsek?: string
           nama?: string
           npsn?: string
+          telepon?: string
         }
         Relationships: []
       }
