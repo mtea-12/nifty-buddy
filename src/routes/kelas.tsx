@@ -1,8 +1,12 @@
 import * as React from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 import { AppLayout } from "@/components/AppLayout";
 import { PanelTabel, thCls, tdCls, KosongTabel, Lencana } from "@/components/Tabel";
 import { useData } from "@/lib/db";
+import { useAuth } from "@/lib/auth";
+import { supabase } from "@/integrations/supabase/client";
+import type { Kelas } from "@/lib/data";
 
 export const Route = createFileRoute("/kelas")({
   head: () => ({
@@ -16,12 +20,95 @@ export const Route = createFileRoute("/kelas")({
   component: DataKelas,
 });
 
+function DialogUbahKelas({
+  kelas,
+  tutup,
+}: {
+  kelas: Kelas;
+  tutup: () => void;
+}) {
+  const { guru, segarkan } = useData();
+  const [jurusan, setJurusan] = React.useState(kelas.jurusan);
+  const [waliId, setWaliId] = React.useState(kelas.waliId ?? "");
+  const [simpan, setSimpan] = React.useState(false);
+
+  async function kirim(e: React.FormEvent) {
+    e.preventDefault();
+    setSimpan(true);
+    const { error } = await supabase
+      .from("kelas")
+      .update({ jurusan: jurusan.trim(), wali_id: waliId || null })
+      .eq("id", kelas.id);
+    setSimpan(false);
+    if (error) {
+      toast.error("Gagal menyimpan: " + error.message);
+      return;
+    }
+    await segarkan();
+    toast.success(`Kelas ${kelas.nama} diperbarui.`);
+    tutup();
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 p-4" role="dialog" aria-modal>
+      <form onSubmit={kirim} className="w-full max-w-md rounded-xl border border-border bg-card p-5 shadow-lg">
+        <h2 className="font-display text-lg font-bold">Ubah Kelas {kelas.nama}</h2>
+        <label className="mt-4 block text-sm font-medium">
+          Program Keahlian
+          <input
+            value={jurusan}
+            onChange={(e) => setJurusan(e.target.value)}
+            maxLength={80}
+            required
+            className="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
+          />
+        </label>
+        <label className="mt-4 block text-sm font-medium">
+          Wali Kelas
+          <select
+            value={waliId}
+            onChange={(e) => setWaliId(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
+          >
+            <option value="">— Belum ditentukan —</option>
+            {guru.map((g) => (
+              <option key={g.id} value={g.id}>
+                {g.nama}
+              </option>
+            ))}
+          </select>
+        </label>
+        <div className="mt-6 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={tutup}
+            className="rounded-lg border border-input px-4 py-2 text-sm font-medium hover:bg-secondary"
+          >
+            Batal
+          </button>
+          <button
+            type="submit"
+            disabled={simpan}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+          >
+            {simpan ? "Menyimpan…" : "Simpan"}
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function DataKelas() {
   const { kelas, mapelKelas, namaGuru, siswa } = useData();
+  const { akun } = useAuth();
+  const bolehUbah = akun?.peran === "admin";
+  const [ubah, setUbah] = React.useState<Kelas | null>(null);
   const [cari, setCari] = React.useState("");
   const hasil = kelas.filter(
     (k) => k.nama.toLowerCase().includes(cari.toLowerCase()) || k.jurusan.toLowerCase().includes(cari.toLowerCase()),
   );
+
 
   return (
     <AppLayout judul="Data Kelas" deskripsi={`${kelas.length} rombongan belajar aktif`}>
