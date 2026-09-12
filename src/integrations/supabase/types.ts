@@ -120,6 +120,39 @@ export type Database = {
           },
         ]
       }
+      log_aksi: {
+        Row: {
+          aksi: string
+          baris_id: string | null
+          created_at: string
+          id: string
+          pelaku_id: string | null
+          pelaku_nama: string
+          ringkasan: string
+          tabel: string
+        }
+        Insert: {
+          aksi: string
+          baris_id?: string | null
+          created_at?: string
+          id?: string
+          pelaku_id?: string | null
+          pelaku_nama?: string
+          ringkasan?: string
+          tabel: string
+        }
+        Update: {
+          aksi?: string
+          baris_id?: string | null
+          created_at?: string
+          id?: string
+          pelaku_id?: string | null
+          pelaku_nama?: string
+          ringkasan?: string
+          tabel?: string
+        }
+        Relationships: []
+      }
       mata_pelajaran: {
         Row: {
           created_at: string
