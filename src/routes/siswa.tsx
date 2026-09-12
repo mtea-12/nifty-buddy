@@ -110,6 +110,7 @@ function DataSiswa() {
   const [hapusId, setHapusId] = React.useState<string | null>(null);
   const [sibuk, setSibuk] = React.useState(false);
   const [galat, setGalat] = React.useState<GalatForm>({});
+  const [imporBuka, setImporBuka] = React.useState(false);
 
   const hasil = siswa.filter(
     (s) =>
@@ -207,7 +208,10 @@ function DataSiswa() {
   return (
     <AppLayout judul="Data Siswa" deskripsi={`${hasil.length} siswa ditampilkan dari ${siswa.length} total`}>
       {isAdmin && (
-        <div className="mb-4 flex justify-end">
+        <div className="mb-4 flex flex-wrap justify-end gap-2">
+          <Button variant="outline" onClick={() => setImporBuka(true)} className="gap-2">
+            <Upload className="h-4 w-4" /> Impor dari Dokumen
+          </Button>
           <Button onClick={bukaTambah} className="gap-2">
             <Plus className="h-4 w-4" /> Tambah Siswa
           </Button>
@@ -412,6 +416,13 @@ function DataSiswa() {
                   className={inputCls}
                 />
               </label>
+              {form.id ? (
+                <DokumenSiswa siswaId={form.id} bolehUbah={isAdmin} />
+              ) : (
+                <p className="rounded-lg border border-dashed border-border p-3 text-xs text-muted-foreground">
+                  Simpan siswa terlebih dahulu untuk mengunggah dokumen pendukung.
+                </p>
+              )}
             </div>
           )}
           <DialogFooter>
