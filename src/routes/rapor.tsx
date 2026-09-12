@@ -94,6 +94,13 @@ function Rapor() {
           <p className="text-xs text-muted-foreground">
             {sekolah.alamat} · NPSN {sekolah.npsn}
           </p>
+          {(sekolah.email || sekolah.telepon) && (
+            <p className="mt-1 text-xs text-muted-foreground">
+              {sekolah.email && <span>Email: {sekolah.email}</span>}
+              {sekolah.email && sekolah.telepon && <span className="mx-2">·</span>}
+              {sekolah.telepon && <span>Telp: {sekolah.telepon}</span>}
+            </p>
+          )}
         </header>
 
         <h3 className="mt-6 text-center font-display text-base font-bold uppercase tracking-wide">
