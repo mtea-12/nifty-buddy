@@ -1,9 +1,10 @@
 import * as React from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";
-import { GraduationCap, LogIn, ShieldCheck } from "lucide-react";
+import { LogIn, ShieldCheck } from "lucide-react";
 import { useAuth, akunDemo, labelPeran } from "@/lib/auth";
 import { siapkanAkunDemo } from "@/lib/demo.functions";
+import logoSekolah from "@/assets/logo-smk.jpg.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -67,8 +68,12 @@ function HalamanMasuk() {
     <div className="grid min-h-screen lg:grid-cols-2">
       <section className="relative hidden flex-col justify-between bg-sidebar p-10 text-sidebar-foreground lg:flex">
         <div className="flex items-center gap-3">
-          <div className="grid h-12 w-12 place-items-center rounded-xl bg-accent text-accent-foreground">
-            <span className="font-display text-xl font-bold">M</span>
+          <div className="grid h-12 w-12 place-items-center overflow-hidden rounded-lg bg-card ring-1 ring-sidebar-border">
+            <img
+              src={logoSekolah.url}
+              alt="Logo SMK Muhammadiyah 1 Paguyangan"
+              className="h-full w-full object-contain p-0.5"
+            />
           </div>
           <div>
             <p className="font-display text-lg font-bold leading-tight">SMK Muhammadiyah 1</p>
@@ -102,8 +107,12 @@ function HalamanMasuk() {
       <section className="flex items-center justify-center bg-background px-4 py-10 sm:px-8">
         <div className="w-full max-w-md">
           <div className="mb-6 flex items-center gap-3 lg:hidden">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-primary text-primary-foreground">
-              <GraduationCap className="h-5 w-5" />
+            <div className="grid h-11 w-11 place-items-center overflow-hidden rounded-lg bg-card ring-1 ring-border">
+              <img
+                src={logoSekolah.url}
+                alt="Logo SMK Muhammadiyah 1 Paguyangan"
+                className="h-full w-full object-contain p-0.5"
+              />
             </div>
             <div className="min-w-0">
               <p className="truncate font-display font-bold">SMK Muhammadiyah 1 Paguyangan</p>

@@ -20,6 +20,7 @@ import { useAuth, labelPeran } from "@/lib/auth";
 import { type Peran } from "@/lib/data";
 import { useData } from "@/lib/db";
 import { cn } from "@/lib/utils";
+import logoSekolah from "@/assets/logo-smk.jpg.asset.json";
 
 type MenuItem = { to: string; label: string; icon: React.ElementType };
 
@@ -56,8 +57,12 @@ const MENU: Record<Peran, MenuItem[]> = {
 export function Logo({ ringkas = false }: { ringkas?: boolean }) {
   return (
     <div className="flex items-center gap-3">
-      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-accent text-accent-foreground shadow-sm">
-        <span className="font-display text-lg font-bold">M</span>
+      <div className="grid h-11 w-11 shrink-0 place-items-center overflow-hidden rounded-lg bg-card shadow-sm ring-1 ring-sidebar-border">
+        <img
+          src={logoSekolah.url}
+          alt="Logo SMK Muhammadiyah 1 Paguyangan"
+          className="h-full w-full object-contain p-0.5"
+        />
       </div>
       {!ringkas && (
         <div className="min-w-0">
