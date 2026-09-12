@@ -140,6 +140,16 @@ function DataKelas() {
                   </dd>
                 </div>
               </dl>
+              {bolehUbah && (
+                <button
+                  type="button"
+                  onClick={() => setUbah(k)}
+                  className="mt-4 w-full rounded-lg border border-input px-3 py-2 text-sm font-medium hover:bg-secondary"
+                >
+                  Ubah program keahlian / wali kelas
+                </button>
+              )}
+
             </div>
           );
         })}
