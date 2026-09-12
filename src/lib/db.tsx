@@ -37,7 +37,7 @@ const KOSONG: Semua = {
 
 async function ambilSemua(): Promise<Semua> {
   const [sekolah, ta, mapel, guru, kelas, km, siswa, nilai] = await Promise.all([
-    supabase.from("sekolah").select("*").limit(1).maybeSingle(),
+    supabase.from("sekolah").select("id, nama, alamat, npsn, kepsek, email, telepon").limit(1).maybeSingle(),
     supabase.from("tahun_ajaran").select("*").order("tahun", { ascending: false }),
     supabase.from("mata_pelajaran").select("*").order("kode"),
     supabase.from("guru").select("*").order("nama"),
@@ -65,6 +65,8 @@ async function ambilSemua(): Promise<Semua> {
           alamat: sekolah.data.alamat,
           npsn: sekolah.data.npsn,
           kepsek: sekolah.data.kepsek,
+          email: sekolah.data.email ?? "",
+          telepon: sekolah.data.telepon ?? "",
         }
       : KOSONG.sekolah,
     tahunAjaran: (ta.data ?? []).map((t) => ({
