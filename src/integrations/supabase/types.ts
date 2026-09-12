@@ -182,9 +182,11 @@ export type Database = {
       }
       nilai: {
         Row: {
+          hadir: number
           id: string
           mapel_id: string
           pas: number
+          pertemuan: number
           pts: number
           siswa_id: string
           tahun_ajaran_id: string
@@ -192,9 +194,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          hadir?: number
           id?: string
           mapel_id: string
           pas?: number
+          pertemuan?: number
           pts?: number
           siswa_id: string
           tahun_ajaran_id: string
@@ -202,9 +206,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          hadir?: number
           id?: string
           mapel_id?: string
           pas?: number
+          pertemuan?: number
           pts?: number
           siswa_id?: string
           tahun_ajaran_id?: string
@@ -286,6 +292,7 @@ export type Database = {
           nama: string
           nis: string
           nisn: string
+          tanggal_lahir: string | null
           user_id: string | null
           wali: string
         }
@@ -297,6 +304,7 @@ export type Database = {
           nama: string
           nis: string
           nisn?: string
+          tanggal_lahir?: string | null
           user_id?: string | null
           wali?: string
         }
@@ -308,6 +316,7 @@ export type Database = {
           nama?: string
           nis?: string
           nisn?: string
+          tanggal_lahir?: string | null
           user_id?: string | null
           wali?: string
         }
