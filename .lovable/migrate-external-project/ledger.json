@@ -1,0 +1,7 @@
+[
+  {"capability":"application code (routes, components, lib, styles)","source":"github repo mtea-12/nifty-grades","outcome":"copied into project","status":"verified","next_action":""},
+  {"capability":"schema (10 tables, RLS, functions, triggers)","source":"supabase + drizzle migrations","outcome":"applied via 3 migrations","status":"verified","next_action":""},
+  {"capability":"seed records (sekolah, tahun ajaran, mapel, guru, kelas, 60 siswa, nilai)","source":"migration INSERTs","outcome":"preserved with IDs","status":"verified","next_action":""},
+  {"capability":"auth (email/password) + 4 demo accounts","source":"repo auth.tsx + demo.functions.ts","outcome":"Lovable Cloud auth, email auth enabled","status":"verified","next_action":""},
+  {"capability":"record exports beyond seed data","source":"none in repo","outcome":"none found","status":"absent","next_action":"Ask user for CSV/JSON exports only if they have real data elsewhere"}
+]

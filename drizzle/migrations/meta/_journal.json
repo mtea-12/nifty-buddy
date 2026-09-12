@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1789183793466,
+      "tag": "0000_schema_awal_sistem_nilai",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789183820201,
+      "tag": "0001_log_aksi",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789183832236,
+      "tag": "0002_siswa_tanggal_lahir_dan_nilai_absensi",
+      "breakpoints": true
+    }
+  ]
+}
